@@ -16,15 +16,15 @@
         .card {
             background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
             padding: 30px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            text-align: center; width: 90%; max-width: 450px; transition: all 0.5s ease;
-            position: relative;
+            text-align: center; width: 90%; max-width: 480px; min-height: 500px;
+            transition: all 0.5s ease; position: relative;
         }
 
         .purple-mode { background-color: var(--main-purple) !important; }
         .purple-mode .card { background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid rgba(255,255,255,0.3); }
 
         .image-container { 
-            width: 100%; height: 300px; margin-bottom: 20px; border-radius: 15px; 
+            width: 100%; height: 280px; margin-bottom: 20px; border-radius: 15px; 
             overflow: hidden; display: flex; align-items: center; justify-content: center;
         }
 
@@ -32,21 +32,28 @@
             max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 15px;
         }
 
-        /* The Bounding Box */
+        /* Larger Bounding Box for Button Action */
         .btn-container { 
-            display: flex; justify-content: space-around; align-items: center;
-            position: relative; height: 150px; margin-top: 10px; border-radius: 10px;
+            position: relative; height: 180px; margin-top: 10px;
+            display: flex; justify-content: center; align-items: center;
         }
 
-        button { padding: 15px 30px; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; font-size: 18px; }
+        button { 
+            padding: 15px 30px; border: none; border-radius: 15px; 
+            font-weight: bold; cursor: pointer; font-size: 18px;
+            transition: left 0.2s ease, top 0.2s ease, transform 0.3s ease;
+        }
 
-        #yesBtn { background-color: var(--main-purple); color: white; z-index: 10; position: relative; }
+        #yesBtn { 
+            background-color: var(--main-purple); color: white; 
+            position: absolute; left: 25%; z-index: 10;
+        }
+
         .purple-mode #yesBtn { background-color: #fff; color: var(--main-purple); }
 
         #noBtn { 
             background-color: var(--error-red); color: white; 
-            position: absolute; transition: 0.1s ease-out;
-            left: 60%; /* Starting position */
+            position: absolute; left: 55%;
         }
 
         #secretLink { display: block; margin-top: 15px; color: #ffeb3b; text-decoration: underline; cursor: pointer; }
@@ -57,7 +64,7 @@
     <div class="card">
         <h2 id="text">Are you alive?</h2>
         <div class="image-container" id="media">
-            <img src="alive.jpg" id="mainImg">
+            <img src="alive.jpg" id="mainImg" onerror="this.src='https://via.placeholder.com/300x300?text=Check+Alive.jpg'">
         </div>
         <div class="btn-container" id="box">
             <button id="yesBtn" onclick="next()">Yes</button>
@@ -70,19 +77,40 @@
         const text = document.getElementById('text');
         const media = document.getElementById('media');
         const bg = document.getElementById('bg');
+        const yesBtn = document.getElementById('yesBtn');
         const noBtn = document.getElementById('noBtn');
         const box = document.getElementById('box');
 
         function runAway() {
-            // Get dimensions of the button container (the bounding box)
-            const boxWidth = box.clientWidth;
-            const boxHeight = box.clientHeight;
-            const btnWidth = noBtn.clientWidth;
-            const btnHeight = noBtn.clientHeight;
+            const boxRect = box.getBoundingClientRect();
+            const yesRect = yesBtn.getBoundingClientRect();
+            
+            const padding = 20;
+            let newX, newY;
+            let isOverlapping = true;
 
-            // Calculate random position strictly INSIDE the container
-            const newX = Math.random() * (boxWidth - btnWidth);
-            const newY = Math.random() * (boxHeight - btnHeight);
+            // Loop to ensure No button doesn't land on the Yes button
+            while (isOverlapping) {
+                newX = Math.random() * (boxRect.width - noBtn.clientWidth - padding);
+                newY = Math.random() * (boxRect.height - noBtn.clientHeight - padding);
+
+                // Check overlap with Yes button position
+                const noRectFuture = {
+                    left: boxRect.left + newX,
+                    top: boxRect.top + newY,
+                    right: boxRect.left + newX + noBtn.clientWidth,
+                    bottom: boxRect.top + newY + noBtn.clientHeight
+                };
+
+                if (!(noRectFuture.left > yesRect.right || 
+                      noRectFuture.right < yesRect.left || 
+                      noRectFuture.top > yesRect.bottom || 
+                      noRectFuture.bottom < yesRect.top)) {
+                    isOverlapping = true;
+                } else {
+                    isOverlapping = false;
+                }
+            }
 
             noBtn.style.left = newX + 'px';
             noBtn.style.top = newY + 'px';
@@ -91,30 +119,25 @@
         function next() {
             if (stage === 1) {
                 text.innerHTML = "Are you gay? 🤨";
-                // New high-reliability Sus Cat link
-                media.innerHTML = '<img src="https://giphy.com/embed/H5AV1xeqvwpH53A475" style="pointer-events: none; width: 100%; border:0;" class="giphy-embed">';
+                // Reliable GIF Link
+                media.innerHTML = '<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp3M3p3enp3enp3enp3enp3enp3enp3enp3enp3enp3enp3enp3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/H5AV1xeqvwpH53A475/giphy.gif">';
                 stage++;
-                resetNoBtn();
             } else if (stage === 2) {
                 bg.classList.add('purple-mode');
                 text.innerHTML = "Will you be my Valentine?";
                 media.innerHTML = '<h1 style="font-size: 150px; margin: 0;">💜</h1>';
+                
+                // Move Yes button to the exact center
+                yesBtn.style.left = '50%';
+                yesBtn.style.transform = 'translateX(-50%)';
+                
                 stage++;
-                resetNoBtn();
             } else {
                 text.innerHTML = "YAY! ❤️";
                 media.innerHTML = '<img src="success.jpg"><br><h3>hehe you mine now</h3>';
                 media.innerHTML += '<p id="secretLink" onclick="showSecret()">Click for a secret message...</p>';
                 document.getElementById('box').style.display = 'none';
             }
-        }
-
-        function resetNoBtn() {
-            // Centers the button briefly or ensures it is visible for the next stage
-            noBtn.style.position = 'absolute';
-            noBtn.style.left = '60%';
-            noBtn.style.top = '50%';
-            noBtn.style.transform = 'translateY(-50%)';
         }
 
         function showSecret() {
