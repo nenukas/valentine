@@ -58,22 +58,24 @@
         }
 
         function next() {
-            if (stage === 1) {
-                text.innerHTML = "Security Threat!<br>Are you gay? 🤨";
-                meme.innerHTML = "🐱"; // You can replace with <img src="sus-cat.png">
-                stage++;
-            } else if (stage === 2) {
-                body.classList.add('purple-theme');
-                text.innerHTML = "Final Question...<br>Will you be my Valentine?";
-                meme.innerHTML = "💜";
-                noBtn.style.position = 'static'; // Reset for final challenge
-                stage++;
-            } else {
-                text.innerHTML = "YAY! ❤️<br>See you on the 14th!";
-                meme.innerHTML = "👩‍❤️‍👨";
-                document.querySelector('.btn-container').style.display = 'none';
-            }
-        }
+	    if (stage === 1) {
+		text.innerHTML = "Security Threat!<br>Are you gay? 🤨";
+		// This is the Sus Cat GIF
+		meme.innerHTML = '<img src="https://media.tenor.com/CC_fI-N5Y_YAAAAC/cat-side-eye.gif" width="180" style="border-radius: 15px;">';
+		stage++;
+	    } else if (stage === 2) {
+		body.classList.add('purple-theme');
+		text.innerHTML = "Final Question...<br>Will you be my Valentine?";
+		// You can replace this URL with a cute pic of you two!
+		meme.innerHTML = "💜"; 
+		noBtn.style.position = 'static'; 
+		stage++;
+	    } else {
+		text.innerHTML = "YAY! ❤️<br>See you on the 14th!";
+		meme.innerHTML = "👩‍❤️‍👨";
+		document.querySelector('.btn-container').style.display = 'none';
+    }
+}
     </script>
 </body>
 </html>
