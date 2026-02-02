@@ -8,14 +8,13 @@
         :root { 
             --deep-purple: #4b0082; 
             --royal-purple: #6a0dad; 
-            --light-purple: #9370db;
             --error-red: #ff4d4d; 
         }
         
         body {
             margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center;
-            /* Deep Purple Background - No Pink */
             background-color: var(--deep-purple);
+            /* Dark Purple Cupid Pattern - No Pink */
             background-image: url("https://www.transparenttextures.com/patterns/cupid.png");
             background-blend-mode: multiply;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -24,20 +23,19 @@
 
         .card {
             background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
-            padding: 40px; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            padding: 40px; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.4);
             text-align: center; width: 95%; max-width: 650px; 
             min-height: 620px; transition: all 0.5s ease; position: relative;
-            z-index: 5;
         }
 
-        /* Final Stage Styles */
         .final-mode { background-color: #2e004f !important; background-image: none; }
         .final-mode .card { background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
 
         .image-container { 
             width: 100%; height: 400px; margin-bottom: 25px; border-radius: 20px; 
             overflow: hidden; display: flex; align-items: center; justify-content: center;
-            background: #000;
+            /* Removed black background */
+            background: transparent;
         }
 
         .image-container img { 
@@ -52,18 +50,17 @@
         button { 
             padding: 20px 45px; border: none; border-radius: 20px; 
             font-weight: bold; cursor: pointer; font-size: 24px;
-            transition: left 0.15s ease-out, top 0.15s ease-out, transform 0.2s;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         #yesBtn { background-color: var(--royal-purple); color: white; position: absolute; left: 20%; z-index: 10; }
         .final-mode #yesBtn { background-color: white; color: var(--royal-purple); }
 
-        #noBtn { background-color: var(--error-red); color: white; position: absolute; left: 60%; }
+        #noBtn { background-color: var(--error-red); color: white; position: absolute; left: 60%; transition: 0.1s ease-out; }
 
         #secretLink { display: block; margin-top: 20px; color: #ffeb3b; text-decoration: underline; cursor: pointer; font-size: 18px; }
         h2 { font-size: 36px; margin-bottom: 20px; color: #333; }
-        .final-mode h2 { color: white; }
+        .final-mode h2, .final-mode h3 { color: white; }
     </style>
 </head>
 <body id="bg">
@@ -98,22 +95,15 @@
             while (isOverlapping) {
                 newX = Math.random() * (boxRect.width - noBtn.clientWidth - padding);
                 newY = Math.random() * (boxRect.height - noBtn.clientHeight - padding);
-
                 const noRectFuture = {
-                    left: boxRect.left + newX,
-                    top: boxRect.top + newY,
+                    left: boxRect.left + newX, top: boxRect.top + newY,
                     right: boxRect.left + newX + noBtn.clientWidth,
                     bottom: boxRect.top + newY + noBtn.clientHeight
                 };
-
-                if (!(noRectFuture.left > yesRect.right || 
-                      noRectFuture.right < yesRect.left || 
-                      noRectFuture.top > yesRect.bottom || 
-                      noRectFuture.bottom < yesRect.top)) {
+                if (!(noRectFuture.left > yesRect.right || noRectFuture.right < yesRect.left || 
+                      noRectFuture.top > yesRect.bottom || noRectFuture.bottom < yesRect.top)) {
                     isOverlapping = true;
-                } else {
-                    isOverlapping = false;
-                }
+                } else { isOverlapping = false; }
             }
             noBtn.style.left = newX + 'px';
             noBtn.style.top = newY + 'px';
@@ -122,8 +112,8 @@
         function next() {
             if (stage === 1) {
                 text.innerHTML = "Are you gay? 🤨";
-                // Swapped to a high-reliability direct link from tenor
-                media.innerHTML = '<img src="https://media.tenor.com/CC_fI-N5Y_YAAAAC/cat-side-eye.gif" alt="Sus Cat">';
+                // Uses your downloaded sus image
+                media.innerHTML = '<img src="sus.gif" alt="Sus Cat">';
                 stage++;
             } else if (stage === 2) {
                 bg.classList.add('final-mode');
@@ -134,7 +124,7 @@
                 stage++;
             } else {
                 text.innerHTML = "YAY! ❤️";
-                media.innerHTML = '<img src="success.jpg"><br><h2 style="margin-top:15px; color:white;">hehe you mine now</h2>';
+                media.innerHTML = '<img src="success.jpg"><br><h3>hehe you mine now</h3>';
                 media.innerHTML += '<p id="secretLink" onclick="showSecret()">Click for a secret message...</p>';
                 document.getElementById('box').style.display = 'none';
             }
