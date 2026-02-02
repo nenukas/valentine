@@ -9,54 +9,62 @@
         
         body {
             margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center;
-            background-color: #f3e5f5; font-family: -apple-system, sans-serif;
+            background-color: #f3e5f5;
+            /* Angel/Heart Background Pattern */
+            background-image: url("https://www.transparenttextures.com/patterns/cupid.png");
+            font-family: -apple-system, sans-serif;
             transition: background-color 0.8s ease; overflow: hidden;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
-            padding: 30px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            text-align: center; width: 90%; max-width: 480px; min-height: 500px;
-            transition: all 0.5s ease; position: relative;
+            background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
+            padding: 40px; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            text-align: center; width: 95%; max-width: 650px; /* Made Card Much Bigger */
+            min-height: 600px; transition: all 0.5s ease; position: relative;
+            z-index: 5;
         }
 
-        .purple-mode { background-color: var(--main-purple) !important; }
+        .purple-mode { background-color: var(--main-purple) !important; background-image: none; }
         .purple-mode .card { background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid rgba(255,255,255,0.3); }
 
         .image-container { 
-            width: 100%; height: 280px; margin-bottom: 20px; border-radius: 15px; 
+            width: 100%; height: 400px; /* Scaled Image Area */
+            margin-bottom: 25px; border-radius: 20px; 
             overflow: hidden; display: flex; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.03);
         }
 
-        .image-container img { 
-            max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 15px;
+        .image-container img, .image-container iframe { 
+            width: 100%; height: 100%; object-fit: contain; border-radius: 20px; border: none;
         }
 
-        /* Larger Bounding Box for Button Action */
         .btn-container { 
-            position: relative; height: 180px; margin-top: 10px;
+            position: relative; height: 180px; margin-top: 20px;
             display: flex; justify-content: center; align-items: center;
         }
 
         button { 
-            padding: 15px 30px; border: none; border-radius: 15px; 
-            font-weight: bold; cursor: pointer; font-size: 18px;
+            padding: 20px 40px; border: none; border-radius: 20px; 
+            font-weight: bold; cursor: pointer; font-size: 22px; /* Bigger Buttons */
             transition: left 0.2s ease, top 0.2s ease, transform 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         #yesBtn { 
             background-color: var(--main-purple); color: white; 
-            position: absolute; left: 25%; z-index: 10;
+            position: absolute; left: 20%; z-index: 10;
         }
 
         .purple-mode #yesBtn { background-color: #fff; color: var(--main-purple); }
 
         #noBtn { 
             background-color: var(--error-red); color: white; 
-            position: absolute; left: 55%;
+            position: absolute; left: 60%;
         }
 
-        #secretLink { display: block; margin-top: 15px; color: #ffeb3b; text-decoration: underline; cursor: pointer; }
+        #secretLink { display: block; margin-top: 20px; color: #ffeb3b; text-decoration: underline; cursor: pointer; font-size: 18px; }
+        
+        h2 { font-size: 32px; margin-bottom: 20px; }
     </style>
 </head>
 <body id="bg">
@@ -64,7 +72,7 @@
     <div class="card">
         <h2 id="text">Are you alive?</h2>
         <div class="image-container" id="media">
-            <img src="alive.jpg" id="mainImg" onerror="this.src='https://via.placeholder.com/300x300?text=Check+Alive.jpg'">
+            <img src="alive.jpg" id="mainImg">
         </div>
         <div class="btn-container" id="box">
             <button id="yesBtn" onclick="next()">Yes</button>
@@ -84,17 +92,14 @@
         function runAway() {
             const boxRect = box.getBoundingClientRect();
             const yesRect = yesBtn.getBoundingClientRect();
-            
-            const padding = 20;
+            const padding = 30;
             let newX, newY;
             let isOverlapping = true;
 
-            // Loop to ensure No button doesn't land on the Yes button
             while (isOverlapping) {
                 newX = Math.random() * (boxRect.width - noBtn.clientWidth - padding);
                 newY = Math.random() * (boxRect.height - noBtn.clientHeight - padding);
 
-                // Check overlap with Yes button position
                 const noRectFuture = {
                     left: boxRect.left + newX,
                     top: boxRect.top + newY,
@@ -111,7 +116,6 @@
                     isOverlapping = false;
                 }
             }
-
             noBtn.style.left = newX + 'px';
             noBtn.style.top = newY + 'px';
         }
@@ -119,22 +123,20 @@
         function next() {
             if (stage === 1) {
                 text.innerHTML = "Are you gay? 🤨";
-                // Reliable GIF Link
-                media.innerHTML = '<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp3M3p3enp3enp3enp3enp3enp3enp3enp3enp3enp3enp3enp3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/H5AV1xeqvwpH53A475/giphy.gif">';
+                // Fixed Image Issue using iframe embed for Giphy
+                media.innerHTML = '<iframe src="https://giphy.com/embed/H5AV1xeqvwpH53A475" width="100%" height="100%" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>';
                 stage++;
             } else if (stage === 2) {
                 bg.classList.add('purple-mode');
                 text.innerHTML = "Will you be my Valentine?";
-                media.innerHTML = '<h1 style="font-size: 150px; margin: 0;">💜</h1>';
-                
-                // Move Yes button to the exact center
+                media.innerHTML = '<h1 style="font-size: 200px; margin: 0;">💜</h1>';
                 yesBtn.style.left = '50%';
                 yesBtn.style.transform = 'translateX(-50%)';
-                
                 stage++;
             } else {
                 text.innerHTML = "YAY! ❤️";
-                media.innerHTML = '<img src="success.jpg"><br><h3>hehe you mine now</h3>';
+                // Uses your success.jpg
+                media.innerHTML = '<img src="success.jpg"><br><h2 style="margin-top:15px;">hehe you mine now</h2>';
                 media.innerHTML += '<p id="secretLink" onclick="showSecret()">Click for a secret message...</p>';
                 document.getElementById('box').style.display = 'none';
             }
