@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Diagnostic</title>
+    <style>
+        :root { --main-purple: #6a0dad; --light-purple: #e1bee7; }
+        body {
+            margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center;
+            background-color: #f3e5f5; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica;
+            transition: all 0.8s ease; overflow: hidden;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px);
+            padding: 40px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center; width: 320px; transition: all 0.5s ease;
+        }
+        .purple-theme { background-color: var(--main-purple) !important; color: white !important; }
+        .purple-theme .card { background: rgba(255, 255, 255, 0.15); color: white; border: 1px solid rgba(255,255,255,0.2); }
+        
+        h1 { font-size: 24px; margin-bottom: 20px; }
+        .meme-container { height: 150px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 50px; }
+        
+        .btn-container { display: flex; justify-content: space-around; position: relative; height: 50px; }
+        button {
+            padding: 12px 25px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer;
+            transition: transform 0.2s; font-size: 16px;
+        }
+        #yesBtn { background-color: var(--main-purple); color: white; z-index: 10; }
+        #noBtn { background-color: var(--light-purple); color: var(--main-purple); }
+    </style>
+</head>
+<body id="body">
+
+    <div class="card">
+        <h1 id="text">System Booting...<br>Are you alive?</h1>
+        <div class="meme-container" id="meme">🔋</div>
+        <div class="btn-container">
+            <button id="yesBtn" onclick="next()">Yes</button>
+            <button id="noBtn" onmouseover="runAway()" onclick="runAway()">No</button>
+        </div>
+    </div>
+
+    <script>
+        let stage = 1;
+        const text = document.getElementById('text');
+        const meme = document.getElementById('meme');
+        const body = document.getElementById('body');
+        const noBtn = document.getElementById('noBtn');
+
+        function runAway() {
+            const x = Math.random() * (window.innerWidth - noBtn.clientWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.clientHeight);
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        }
+
+        function next() {
+            if (stage === 1) {
+                text.innerHTML = "Security Threat!<br>Are you gay? 🤨";
+                meme.innerHTML = "🐱"; // You can replace with <img src="sus-cat.png">
+                stage++;
+            } else if (stage === 2) {
+                body.classList.add('purple-theme');
+                text.innerHTML = "Final Question...<br>Will you be my Valentine?";
+                meme.innerHTML = "💜";
+                noBtn.style.position = 'static'; // Reset for final challenge
+                stage++;
+            } else {
+                text.innerHTML = "YAY! ❤️<br>See you on the 14th!";
+                meme.innerHTML = "👩‍❤️‍👨";
+                document.querySelector('.btn-container').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
