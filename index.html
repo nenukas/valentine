@@ -14,11 +14,12 @@
         body {
             margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center;
             background-color: var(--deep-purple);
-            /* SVG Cupid/Heart Pattern - Highly reliable for Mac/iPhone */
+            /* Starting SVG Pattern */
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M40 20c-5-10-15-10-20-5-5 5-5 15 0 20l20 20 20-20c5-5 5-15 0-20-5-5-15-5-20 5z' fill='%234b0082' fill-opacity='0.6'/%3E%3C/svg%3E");
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            transition: background-color 0.8s ease; 
+            transition: background 1.5s ease-in-out, background-color 0.8s ease; 
             overflow: hidden;
+            background-repeat: repeat;
         }
 
         .card {
@@ -28,8 +29,15 @@
             transition: all 0.5s ease; position: relative; z-index: 5;
         }
 
-        .final-mode { background-color: #1a0033 !important; background-image: none; }
-        .final-mode .card { background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
+        /* This only triggers on the VERY LAST page */
+        .success-bg { 
+            background-color: transparent !important; 
+            background-image: url('background.jpg') !important; 
+            background-size: auto;
+            background-repeat: repeat;
+        }
+        
+        .success-bg .card { background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
 
         .image-container { 
             width: 100%; height: 450px; margin-bottom: 25px; border-radius: 20px; 
@@ -43,16 +51,15 @@
         button { padding: 22px 50px; border: none; border-radius: 22px; font-weight: bold; cursor: pointer; font-size: 26px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
 
         #yesBtn { background-color: var(--royal-purple); color: white; position: absolute; left: 20%; z-index: 10; }
-        .final-mode #yesBtn { background-color: white; color: var(--royal-purple); }
+        .success-bg #yesBtn { background-color: white; color: var(--royal-purple); }
         #noBtn { background-color: var(--error-red); color: white; position: absolute; left: 60%; transition: 0.1s ease-out; }
 
-        /* Rapid Heart Trail Styling */
         .heart-trail { position: fixed; color: #d8b4fe; pointer-events: none; font-size: 24px; z-index: 9999; animation: floatUp 0.8s ease-out forwards; }
         @keyframes floatUp { from { transform: translate(0, 0) scale(1); opacity: 1; } to { transform: translate(20px, -60px) scale(1.5); opacity: 0; } }
 
         #secretLink { display: block; margin-top: 20px; color: #ffeb3b; text-decoration: underline; cursor: pointer; font-size: 18px; }
         h2 { font-size: 40px; margin-bottom: 20px; color: #333; }
-        .final-mode h2, .final-mode h3 { color: white; }
+        .success-bg h2, .success-bg h3 { color: white; }
     </style>
 </head>
 <body id="bg">
@@ -77,18 +84,14 @@
         const noBtn = document.getElementById('noBtn');
         const box = document.getElementById('box');
 
-        // High-Frequency Heart Trail
         document.addEventListener('mousemove', function(e) {
             const heart = document.createElement('div');
             heart.className = 'heart-trail';
             heart.innerHTML = '💜';
             heart.style.left = e.pageX + 'px';
             heart.style.top = e.pageY + 'px';
-            
-            // Randomize size slightly for a more natural feel
             const size = Math.random() * (30 - 15) + 15;
             heart.style.fontSize = size + 'px';
-            
             document.body.appendChild(heart);
             setTimeout(() => heart.remove(), 800);
         });
@@ -123,13 +126,16 @@
                 media.innerHTML = '<img src="sus.gif" alt="Sus Cat">';
                 stage++;
             } else if (stage === 2) {
-                bg.classList.add('final-mode');
+                // Keep background simple for the big question
+                bg.style.backgroundColor = "#4b0082";
                 text.innerHTML = "Will you be my Valentine?";
                 media.innerHTML = '<h1 style="font-size: 250px; margin: 0; filter: drop-shadow(0 0 20px #fff);">💜</h1>';
                 yesBtn.style.left = '50%';
                 yesBtn.style.transform = 'translateX(-50%)';
                 stage++;
             } else {
+                // TRIGGER CUPID BACKGROUND HERE
+                bg.classList.add('success-bg');
                 text.innerHTML = "YAY! ❤️";
                 media.innerHTML = '<img src="success.jpg"><br><h3>hehe you mine now</h3>';
                 media.innerHTML += '<p id="secretLink" onclick="showSecret()">Click for a secret message...</p>';
