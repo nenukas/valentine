@@ -5,89 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>System Diagnostic</title>
     <style>
-        :root { --main-purple: #6a0dad; --light-purple: #e1bee7; }
+        :root { --main-purple: #6a0dad; --light-purple: #e1bee7; --error-red: #ff4d4d; }
         
         body {
-            margin: 0; 
-            height: 100vh; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            background-color: #f3e5f5; /* Starts light, transitions to purple */
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            transition: background-color 0.8s ease; 
-            overflow: hidden;
+            margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center;
+            background-color: #f3e5f5; font-family: -apple-system, sans-serif;
+            transition: background-color 0.8s ease; overflow: hidden;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.9); 
-            backdrop-filter: blur(10px);
-            padding: 25px; 
-            border-radius: 24px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            text-align: center; 
-            width: 85%; 
-            max-width: 350px; 
-            transition: all 0.5s ease;
-            z-index: 2;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            padding: 30px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center; width: 90%; max-width: 500px; transition: all 0.5s ease;
         }
 
-        /* Purple theme applied to the body and card for final stages */
         .purple-mode { background-color: var(--main-purple) !important; }
-        .purple-mode .card { 
-            background: rgba(255, 255, 255, 0.15); 
-            color: white; 
-            border: 1px solid rgba(255,255,255,0.2); 
-        }
+        .purple-mode .card { background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid rgba(255,255,255,0.3); }
 
         .image-container { 
-            width: 100%;
-            height: 250px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            margin-bottom: 20px;
-            overflow: hidden;
-            border-radius: 15px;
+            width: 100%; margin-bottom: 20px; border-radius: 15px; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
         }
 
         .image-container img { 
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Ensures photos fit nicely without stretching */
+            width: 100%; max-height: 55vh; object-fit: contain; border-radius: 15px;
         }
 
-        .btn-container { 
-            display: flex; 
-            justify-content: space-around; 
-            position: relative; 
-            height: 60px; 
-            margin-top: 20px; 
-        }
+        .btn-container { display: flex; justify-content: space-around; position: relative; height: 70px; margin-top: 20px; }
 
-        button { 
-            padding: 12px 25px; 
-            border: none; 
-            border-radius: 12px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            font-size: 16px;
-            transition: transform 0.1s;
-        }
+        button { padding: 15px 30px; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; font-size: 18px; transition: 0.1s; }
 
         #yesBtn { background-color: var(--main-purple); color: white; }
-        .purple-mode #yesBtn { background-color: white; color: var(--main-purple); }
+        .purple-mode #yesBtn { background-color: #fff; color: var(--main-purple); }
 
-        #noBtn { background-color: var(--light-purple); color: var(--main-purple); }
+        #noBtn { background-color: var(--error-red); color: white; z-index: 999; }
 
-        #secretLink { 
-            display: block;
-            margin-top: 15px;
-            font-size: 0.9rem;
-            color: #ffeb3b;
-            text-decoration: underline;
-            cursor: pointer;
-        }
+        #secretLink { display: block; margin-top: 15px; color: #ffeb3b; text-decoration: underline; cursor: pointer; }
     </style>
 </head>
 <body id="bg">
@@ -95,7 +48,7 @@
     <div class="card">
         <h2 id="text">Are you alive?</h2>
         <div class="image-container" id="media">
-            <img src="alive.jpg" alt="Check">
+            <img src="alive.jpg">
         </div>
         <div class="btn-container">
             <button id="yesBtn" onclick="next()">Yes</button>
@@ -111,8 +64,11 @@
         const noBtn = document.getElementById('noBtn');
 
         function runAway() {
-            const x = Math.random() * (window.innerWidth - noBtn.clientWidth);
-            const y = Math.random() * (window.innerHeight - noBtn.clientHeight);
+            // Keep button 100px away from edges so it doesn't "disappear"
+            const padding = 100;
+            const x = Math.random() * (window.innerWidth - noBtn.clientWidth - padding) + (padding/2);
+            const y = Math.random() * (window.innerHeight - noBtn.clientHeight - padding) + (padding/2);
+            
             noBtn.style.position = 'fixed';
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
@@ -121,18 +77,17 @@
         function next() {
             if (stage === 1) {
                 text.innerHTML = "Are you gay? 🤨";
-                media.innerHTML = '<img src="https://media.tenor.com/CC_fI-N5Y_YAAAAC/cat-side-eye.gif">';
+                media.innerHTML = '<img src="https://media1.tenor.com/m/Y76NIdI_p3wAAAAC/cat-side-eye.gif">';
                 stage++;
             } else if (stage === 2) {
                 bg.classList.add('purple-mode');
                 text.innerHTML = "Will you be my Valentine?";
-                media.innerHTML = '<h1 style="font-size: 80px;">💜</h1>';
+                media.innerHTML = '<h1 style="font-size: 120px; margin: 0;">💜</h1>';
                 noBtn.style.position = 'static'; 
                 stage++;
             } else {
                 text.innerHTML = "YAY! ❤️";
-                // Success screen with your uploaded group photo
-                media.innerHTML = '<img src="success.jpg"><br><h3>I knew you’d say yes!</h3>';
+                media.innerHTML = '<img src="success.jpg"><br><h3>hehe you mine now</h3>';
                 media.innerHTML += '<p id="secretLink" onclick="showSecret()">Click for a secret message...</p>';
                 document.querySelector('.btn-container').style.display = 'none';
             }
